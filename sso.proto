@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+option go_package = "github.com/UniqueStudio/UniqueSSO/pb/sso";
+
+import "google/protobuf/any.proto";
+
+// to be honest, this is a user system, not only a SSO
+// but for the historical reason, the project name is sso
+package sso;
+
+message User {
+    // @gotags: json:"uid" gorm:"column:uid;primaryKey"
+    string UID = 1;
+    // @gotags: json:"name" gorm:"column:name"
+    string Name = 2;
+    // @gotags: json:"phone" gorm:"column:phone"
+    string Phone = 3;
+    // @gotags: json:"email" gorm:"column:email"
+    string Email = 4;
+    // @gotags: json:"password" gorm:"column:password"
+    string Password = 5;
+    // @gotags: json:"totp_secret" gorm:"column:totp_secret"
+    string TOTPSecret = 6;
+    // @gotags: json:"user_type" gorm:"column:user_type"
+    UserType UserType = 7;
+    // @gotags: json:"group" gorm:"-"
+    repeated Group Group = 8;
+    // @gotags: json:"permissions" gorm:"-"
+    repeated Permission Permissions = 9;
+    // external application, like lark info
+    // @gotags: json:"external_infos" gorm:"-"
+    repeated ExternalInfo ExternalInfos = 10;
+}
+
+enum UserType {
+    Intern    = 0;
+    Regular   = 1;
+    Graduated = 2;
+}
+
+enum Group {
+    WEB     = 0;
+    LAB     = 1;
+    PM      = 2;
+    DESIGN  = 3;
+    ANDROID = 4;
+    IOS     = 5;
+    GAME    = 6;
+    AI      = 7;
+}
+
+enum Action {
+    READ    = 0;
+    WRITE   = 1;
+    EXECUTE = 2;
+}
+
+enum Resource {
+    SMS        = 0;
+    BBS_REPORT = 1;
+}
+
+enum Scope {
+    SELF  = 0;
+    GROUP = 1;
+    ALL   = 2;
+}
+
+message Permission {
+    // @gotags: json:"action" gorm:"column:action"
+    Action Action = 1;
+    // @gotags: json:"resource" gorm:"column:resource"
+    Resource Resource = 2;
+    // @gotags: json:"scope" gorm:"column:scope"
+    Scope Scope = 3;
+}
+
+message ExternalInfo {
+    // @gotags: json:"ename" gorm:"column:ename"
+    string EName = 1;
+    // @gotags: json:"eid" gorm:"eid"
+    string EID = 2;
+    // @gotags: json:"detail" gorm:"-"
+    google.protobuf.Any Detail = 3;
+}
+
+message QueryAccessRequest {
+    string UserID         = 1;
+    Permission Permission = 2;
+}
+
+message QueryAccessResponse {
+    bool HaveAccess = 1;
+}
+
+message QueryUserInfoRequest {
+    string UserID = 1;
+}
+
+service SSOService {
+    rpc HaveAccess(QueryAccessRequest) returns (QueryAccessResponse);
+    rpc GetUserBasicInfo(QueryUserInfoRequest) returns (User);
+}
