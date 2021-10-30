@@ -9,14 +9,8 @@ message LarkUserInfo {
     string Name = 1;
     // @gotags: json:"en_name,omitempty" gorm:"column:en_name"
     string ENName = 2;
-    // @gotags: json:"avatar_url,omitempty" gorm:"column:avatar_url"
-    string AvatarURL = 3;
-    // @gotags: json:"avatar_thumb,omitempty" gorm:"column:avatar_thumb"
-    string AvatarThumb = 4;
-    // @gotags: json:"avatar_middle,omitempty" gorm:"column:avatar_middle"
-    string AvatarMiddle = 5;
-    // @gotags: json:"avatar_big,omitempty" gorm:"column:avatar_big"
-    string AvatarBig = 6;
+    // @gotags: json:"avatar,omitempty" gorm:"-"
+    Avatar Avatar = 3;
     // @gotags: json:"open_id,omitempty" gorm:"column:open_id;index"
     string OpenID = 7;
     // @gotags: json:"union_id,omitempty" gorm:"column:union_id;primaryKey"
@@ -30,7 +24,7 @@ message LarkUserInfo {
     // @gotags: json:"tenant_key,omitempty" gorm:"column:tenant_key"
     string TenantKey = 12;
     // @gotags: json:"gender,omitempty" gorm:"gender"
-    int32 Gender = 13;
+    Gender Gender = 13;
     // @gotags: json:"department_ids,omitempty" gorm:"-"
     repeated string DepartmentIds = 14;
     // @gotags: json:"job_title,omitempty" gorm:"column:job_title"
@@ -39,8 +33,24 @@ message LarkUserInfo {
     int32 EmployeeType = 16;
 }
 
+enum Gender {
+    Male   = 0;
+    Female = 1;
+}
+
+message Avatar {
+    // @gotags: json:"avatar_240"
+    string Avatar240 = 1;
+    // @gotags: json:"avatar_640"
+    string Avatar640 = 2;
+    // @gotags: json:"avatar_72"
+    string Avatar72 = 3;
+    // @gotags: json:"avatar_origin"
+    string AvatarOrigin = 4;
+}
+
 message Department {
-    // @gotags: json:"department"
+    // @gotags: json:"name"
     string Name = 1;
     // @gotags: json:"parent_department_id"
     string ParentDepartmentID = 2;

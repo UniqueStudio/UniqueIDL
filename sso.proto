@@ -11,73 +11,78 @@ package sso;
 message User {
     // @gotags: json:"uid" gorm:"column:uid;primaryKey"
     string UID = 1;
-    // @gotags: json:"name" gorm:"column:name"
-    string Name = 2;
-    // @gotags: json:"phone" gorm:"column:phone"
-    string Phone = 3;
-    // @gotags: json:"email" gorm:"column:email"
-    string Email = 4;
-    // @gotags: json:"password" gorm:"column:password"
-    string Password = 5;
-    // @gotags: json:"totp_secret" gorm:"column:totp_secret"
-    string TOTPSecret = 6;
-    // @gotags: json:"user_type" gorm:"column:user_type"
-    UserType UserType = 7;
     // @gotags: json:"group" gorm:"-"
-    repeated Group Group = 8;
-    // @gotags: json:"permissions" gorm:"-"
-    repeated Permission Permissions = 9;
+    repeated Group Group = 2;
+    // @gotags: json:"role" gorm:"column:role"
+    Role Role = 3;
     // external application, like lark info
     // @gotags: json:"external_infos" gorm:"-"
-    repeated ExternalInfo ExternalInfos = 10;
+    repeated ExternalInfo ExternalInfos = 4;
+    // @gotags: json:"name" gorm:"column:name"
+    string Name = 5;
+    // @gotags: json:"phone" gorm:"column:phone"
+    string Phone = 6;
+    // @gotags: json:"email" gorm:"column:email"
+    string Email = 7;
+    // @gotags: json:"password" gorm:"column:password"
+    string Password = 8;
+    // @gotags: json:"totp_secret" gorm:"column:totp_secret"
+    string TOTPSecret = 9;
+    // @gotags: json:"avatar_url" gorm:"column:avatar_url"
+    string AvatarURL = 10;
+    // @gotags: json:"gender" gorm:"column:gender"
+    Gender Gender = 12;
 }
 
-enum UserType {
-    Intern    = 0;
-    Regular   = 1;
-    Graduated = 2;
+enum Role {
+    INTERN    = 0;
+    REGULAR   = 1;
+    GRADUATED = 2;
+    LEADER    = 3;
+    DEVOPS    = 4;
 }
 
 enum Group {
-    WEB     = 0;
-    LAB     = 1;
-    PM      = 2;
-    DESIGN  = 3;
-    ANDROID = 4;
-    IOS     = 5;
-    GAME    = 6;
-    AI      = 7;
+    invalidGroup = 0;  // for gorm, 0 is invalid when update
+    WEB          = 1;
+    LAB          = 2;
+    PM           = 3;
+    DESIGN       = 4;
+    ANDROID      = 5;
+    IOS          = 6;
+    GAME         = 7;
+    AI           = 8;
+}
+
+enum Gender {
+    invalidGender = 0;
+    MALE          = 1;
+    FEMALE        = 2;
 }
 
 enum Action {
-    READ    = 0;
-    WRITE   = 1;
-    EXECUTE = 2;
+    invalidAction = 0;
+    READ          = 1;
+    FULL          = 2;
 }
 
-enum Resource {
-    SMS        = 0;
-    BBS_REPORT = 1;
-}
-
-enum Scope {
-    SELF  = 0;
-    GROUP = 1;
-    ALL   = 2;
+enum ExternalType {
+    invalidEType = 0;
+    All          = 1;
+    LARK         = 2;
+    QQ           = 3;
 }
 
 message Permission {
     // @gotags: json:"action" gorm:"column:action"
     Action Action = 1;
     // @gotags: json:"resource" gorm:"column:resource"
-    Resource Resource = 2;
-    // @gotags: json:"scope" gorm:"column:scope"
-    Scope Scope = 3;
+    string Resource = 2;  // the resouce is defined by URL
 }
 
 message ExternalInfo {
     // @gotags: json:"ename" gorm:"column:ename"
-    string EName = 1;
+    ExternalType EName = 1;
     // @gotags: json:"eid" gorm:"eid"
     string EID = 2;
     // @gotags: json:"detail" gorm:"-"
@@ -97,7 +102,35 @@ message QueryUserInfoRequest {
     string UserID = 1;
 }
 
+message OperateExternalInfoRequest {
+    string UserID             = 1;
+    ExternalInfo ExternalInfo = 2;
+}
+
+message StandardResponse {
+    bool Success   = 1;
+    string Message = 2;
+}
+
+message KickUserRequest {
+    ExternalType ExternalType = 1;
+    string UserId             = 2;
+    string GroupId            = 3;
+}
+
+message OperatePermissionRequest {
+    string UserID         = 1;
+    Permission Permission = 2;
+}
+
 service SSOService {
-    rpc HaveAccess(QueryAccessRequest) returns (QueryAccessResponse);
     rpc GetUserBasicInfo(QueryUserInfoRequest) returns (User);
+    rpc AddExternalInfo(OperateExternalInfoRequest) returns (StandardResponse);
+    // rpc KickUser(KickUserRequest) returns (StandardResponse);
+
+    // rpc UpdateUserBasicInfo(User) returns (StandardResponse);
+    // rpc UpdateUserExternalInfo(OperateExternalInfoRequest)
+    //     returns (StandardResponse);
+
+    // rpc AddPermission(OperatePermissionRequest) returns (StandardResponse);
 }
