@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/UniqueStudio/UniqueIDL/openPlatform";
+option go_package = "github.com/UniqueStudio/UniqueIDL/open";
 
 package open_platform.v1;
 
