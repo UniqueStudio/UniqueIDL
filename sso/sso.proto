@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "github.com/UniqueStudio/UniqueIDL/sso";
+
+package sso.v1;
+
+message Object {
+    string action   = 1;
+    string resource = 2;
+}
+
+message CheckPermissionRequest {
+    string uid    = 1;
+    Object object = 2;
+}
+
+message CheckPermissionResponse {}
+
+service SSOService {
+    rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+}
