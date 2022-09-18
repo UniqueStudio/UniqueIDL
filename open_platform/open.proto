@@ -33,10 +33,10 @@ service SMSService {
 }
 
 message PushEmailRequest {
-    string to          = 1;  // target email address
-    string subject     = 2;
-    string template_id = 3;  // email template id
-    string params      = 4;  // template param set
+    string to              = 1;  // target email address
+    string subject         = 2;
+    string template_id     = 3;  // email template id
+    repeated string params = 4;  // template param set
 }
 
 message PushEmailResponse {}
