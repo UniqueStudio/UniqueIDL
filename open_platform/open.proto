@@ -16,9 +16,9 @@ message PushSMSResponse {
 }
 
 message SMSTemplate {
-    string template_id  = 1;
-    string content      = 2;
-    string param_number = 3;
+    string template_id = 1;
+    string content     = 2;
+    int32 param_number = 3;
 }
 
 message GetAllSMSTemplatesRequest {}
@@ -42,15 +42,17 @@ message PushEmailRequest {
 message PushEmailResponse {}
 
 message EmailTemplate {
-    string template_id  = 1;
-    string content      = 2;
-    string param_number = 3;
-    string alias        = 4;
+    string template_id = 1;
+    string content     = 2;
+    int32 param_number = 3;
+    string alias       = 4;
 }
 
 message GetAllEmailTemplatesRequest {}
 
-message GetAllEmailTemplatesResponse {}
+message GetAllEmailTemplatesResponse {
+    repeated EmailTemplate templates = 1;
+}
 
 service EmailService {
     rpc PushEmail(PushEmailRequest) returns (PushEmailResponse);
