@@ -4,8 +4,6 @@ option go_package = "github.com/UniqueStudio/UniqueIDL/sso";
 
 package sso.v1;
 
-import "google/protobuf/timestamp.proto";
-
 message Object {
   string action = 1;
   string resource = 2;
@@ -24,6 +22,7 @@ enum Gender {
   GENDER_UNSPECIFIED = 0;
   GENDER_MALE = 1;
   GENDER_FEMALE = 2;
+  GENDER_Others = 3;
 }
 
 message GetUserByUIDResponse {
@@ -39,7 +38,12 @@ message GetUserByUIDResponse {
   string lark_union_id = 9;
 }
 
+message GetRolesByUIDRequest { string uid = 1; }
+
+message GetRolesByUIDResponse { repeated string roles = 2; }
+
 service SSOService {
   rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
   rpc GetUserByUID(GetUserByUIDRequest) returns (GetUserByUIDResponse);
+  rpc GetRolesByUID(GetRolesByUIDRequest) returns (GetRolesByUIDResponse);
 }
