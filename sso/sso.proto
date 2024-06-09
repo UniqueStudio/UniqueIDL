@@ -2,6 +2,9 @@ syntax = "proto3";
 
 option go_package = "github.com/UniqueStudio/UniqueIDL/sso";
 
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
 package sso.v1;
 
 message Object {
@@ -42,8 +45,16 @@ message GetRolesByUIDRequest { string uid = 1; }
 
 message GetRolesByUIDResponse { repeated string roles = 2; }
 
+message GetUsersRequest { repeated string uid = 1; }
+
+message GetUsersResponse { repeated GetUserByUIDResponse users = 1; }
+
+message GetGroupsDetailResponse { google.protobuf.Struct groups = 1; }
+
 service SSOService {
   rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
   rpc GetUserByUID(GetUserByUIDRequest) returns (GetUserByUIDResponse);
   rpc GetRolesByUID(GetRolesByUIDRequest) returns (GetRolesByUIDResponse);
+  rpc GetUsers(GetUsersRequest) returns (GetUsersResponse);
+  rpc GetGroupsDetail(google.protobuf.Empty) returns (GetGroupsDetailResponse);
 }
